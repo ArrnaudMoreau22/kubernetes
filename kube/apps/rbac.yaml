@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rbac
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Jehuty12/T-CLO-902-PRIVEE.git
+    targetRevision: vagrant-corentin
+    path: kube/charts/rbac
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: security
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,31 @@
+# kube/charts/tempo/values.yaml
+tempo:
+  enabled: true
+  metricsGenerator:
+    enabled: true
+
+  persistence:
+    enabled: false
+
+  service:
+    type: ClusterIP
+
+  image:
+    repository: grafana/tempo
+    tag: "2.3.1"
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  serviceMonitor:
+    enabled: true
+    interval: 15s
+    scrapeTimeout: 10s
+    labels:
+      release: prometheus

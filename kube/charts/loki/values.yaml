@@ -1,0 +1,165 @@
+# charts/loki/values-loki-local.yaml
+# Updated: 2025-06-20 - Fixed memberlist for single-node deployment
+global:
+  dnsService: kube-dns
+  dnsNamespace: kube-system
+
+crds:
+  enabled: false   # CRD installée manuellement
+
+loki:
+  deploymentMode: SingleBinary
+
+  singleBinary:
+    replicas: 1
+    persistence:
+      enabled: false
+    extraVolumes:
+      - name: loki-storage
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: loki-storage
+        mountPath: /var/loki
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+    # Probes
+    startupProbe:
+      httpGet:
+        path: /ready
+        port: http-metrics
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 20
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: http-metrics
+      initialDelaySeconds: 90
+      periodSeconds: 30
+      timeoutSeconds: 15
+      failureThreshold: 6
+    livenessProbe:
+      httpGet:
+        path: /ready
+        port: http-metrics
+      initialDelaySeconds: 150
+      periodSeconds: 60
+      timeoutSeconds: 15
+      failureThreshold: 5
+
+  loki:
+    auth_enabled: false
+    server:
+      http_listen_port: 3100
+      grpc_listen_port: 9095
+    common:
+      path_prefix: /var/loki
+      replication_factor: 1
+      storage:
+        filesystem:
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
+    limits_config:
+      retention_period: 1h
+      ingestion_rate_mb: 2
+      ingestion_burst_size_mb: 4
+      reject_old_samples: true
+      reject_old_samples_max_age: 24h
+    storage_config:
+      filesystem:
+        directory: /var/loki
+      # Disable S3 explicitly
+      boltdb_shipper:
+        shared_store: filesystem
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/index_cache
+        resync_interval: 5s
+    compactor:
+      retention_enabled: true
+      retention_delete_delay: 15m
+      working_directory: /var/loki/compactor
+      shared_store: filesystem
+    frontend:
+      compress_responses: true
+    query_range:
+      cache_results: false
+    ingester:
+      lifecycler:
+        ring:
+          kvstore:
+            store: inmemory
+          replication_factor: 1
+        address: 127.0.0.1
+      chunk_idle_period: 2m
+      max_chunk_age: 30m
+      chunk_retain_period: 15s
+    distributor:
+      ring:
+        kvstore:
+          store: inmemory
+    ruler:
+      storage:
+        type: local
+        local:
+          directory: /var/loki/rules
+    schema_config:
+      configs:
+        - from: 2020-10-24
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+    memberlist:
+      join_members: []
+      abort_if_cluster_join_fails: false
+      bind_port: 7946
+      max_join_backoff: 1m
+      max_join_retries: 10
+      min_join_backoff: 1s
+
+  # Pas de pods distribués
+  write: { replicas: 0 }
+  read: { replicas: 0 }
+  backend: { replicas: 0 }
+  gateway: { enabled: false }
+
+  # Monitoring minimal
+  monitoring:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: log
+      interval: 1m
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: loki
+      endpoints:
+        - port: http-metrics
+          path: /metrics
+          interval: 1m
+    prometheusRule:
+      enabled: false
+
+# Disable all Grafana Agent components completely
+grafanaAgent: 
+  enabled: false
+agent:
+  enabled: false
+logs:
+  enabled: false
+
+# Also disable at the chart level
+grafana-agent:
+  enabled: false
+
+serviceMonitor: { enabled: false }
+prometheusRule: { enabled: false }
+test: { enabled: false }

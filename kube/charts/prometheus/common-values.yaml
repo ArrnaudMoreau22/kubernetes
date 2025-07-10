@@ -1,0 +1,93 @@
+# kube/charts/monitoring-stack/common-values.yaml
+
+# Clé principale correspondant à l'alias défini dans Chart.yaml
+kube-prometheus-stack:
+  # -- CRDs --
+  # Installe les Custom Resource Definitions (Prometheus, ServiceMonitor, etc.)
+  # C'est indispensable pour que l'opérateur fonctionne.
+  crds:
+    enabled: true
+    upgradeJob:
+      enabled: false
+
+  # -- Alertmanager --
+  # Désactivé pour le moment pour simplifier et économiser des ressources.
+  alertmanager:
+    enabled: false
+
+  # -- Prometheus --
+  prometheus:
+    enabled: true
+
+    # C'est ici que la magie opère. Cette section configure la ressource Prometheus
+    # qui sera gérée par l'opérateur.
+    prometheusSpec:
+      # Ne pas déduire les sélecteurs automatiquement, on veut un contrôle explicite.
+      serviceMonitorSelectorNilUsesHelmValues: false
+
+      # Dit à Prometheus de ne prendre que les ServiceMonitors qui ont ce label.
+      # Vos ServiceMonitors pour le backend, la bdd et traefik ont ce label.
+      serviceMonitorSelector:
+        matchLabels:
+          release: "prometheus"
+
+      # C'est la configuration la plus critique : on autorise Prometheus à chercher
+      # les ServiceMonitors dans les namespaces où se trouvent vos applications.
+      serviceMonitorNamespaceSelector:
+        matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: In
+            values:
+              - app
+              - log
+              - metallb-system
+              - security
+
+    # Configuration de l'Ingress pour accéder à l'interface web de Prometheus
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - prometheus.client # Correspond à votre configuration précédente
+      paths:
+        - /
+      pathType: Prefix
+
+  # -- Grafana --
+  grafana:
+    enabled: true
+    # Le mot de passe admin que vous aviez défini.
+    adminPassword: admin
+
+    # Configuration de l'Ingress pour accéder à l'interface web de Grafana
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - grafana.client # Correspond à votre configuration précédente
+
+    # Ajout automatique de la datasource Loki, pointant vers votre service Loki
+    # qui est dans le namespace "log".
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        # L'URL interne de votre service Loki
+        url: http://loki.log.svc.cluster.local:3100
+        access: proxy
+
+    # Il est fortement recommandé de rendre Grafana persistant
+    # pour ne pas perdre les dashboards et les configurations.
+    persistence:
+      enabled: true
+      type: pvc
+      # On utilise la storage class que vous avez créée avec le provisioner NFS.
+      storageClassName: "nfs-client"
+      size: 5Gi
+
+  # -- Autres composants --
+  # On désactive les composants dont vous n'avez pas forcément besoin pour commencer
+  # ou que vous gérez séparément (comme promtail).
+  prometheus-node-exporter:
+    enabled: true # Très utile pour les métriques des nœuds
+  kube-state-metrics:
+    enabled: true # Très utile pour les métriques sur l'état des objets Kubernetes

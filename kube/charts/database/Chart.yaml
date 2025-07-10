@@ -1,0 +1,8 @@
+apiVersion: v2
+name: database
+version: 0.1.0
+description: Base de données mysql
+dependencies:
+  - name: mysql
+    version: 9.22.0        # version compatible Helm 3
+    repository: https://charts.bitnami.com/bitnami

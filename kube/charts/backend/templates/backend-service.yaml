@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  selector:
+    app: backend
+  ports:
+  - name: http
+    protocol: TCP
+    port: {{ .Values.image.backend.port }} # doit correspondre au port exposé par Flask (ex: 5000)
+    targetPort: {{ .Values.image.backend.port }}
+  type: ClusterIP

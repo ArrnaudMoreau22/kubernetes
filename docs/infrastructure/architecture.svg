@@ -1,0 +1,331 @@
+<svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1400" height="1000" fill="#f8fafc"/>
+  
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">
+    Architecture Kubernetes - Cluster Multi-Node
+  </text>
+  
+  <!-- Master Node -->
+  <g id="master-node">
+    <rect x="50" y="80" width="300" height="200" rx="10" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+    <text x="200" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#0369a1">
+      Master Node
+    </text>
+    
+    <!-- Control Plane Components -->
+    <rect x="70" y="120" width="80" height="40" rx="5" fill="#3b82f6" stroke="#1e40af" stroke-width="1"/>
+    <text x="110" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Control</text>
+    <text x="110" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Manager</text>
+    
+    <rect x="160" y="120" width="80" height="40" rx="5" fill="#3b82f6" stroke="#1e40af" stroke-width="1"/>
+    <text x="200" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">API Server</text>
+    <text x="200" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">(kube-apiserver)</text>
+    
+    <rect x="250" y="120" width="80" height="40" rx="5" fill="#3b82f6" stroke="#1e40af" stroke-width="1"/>
+    <text x="290" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Scheduler</text>
+    <text x="290" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">(kube-scheduler)</text>
+    
+    <rect x="115" y="170" width="80" height="40" rx="5" fill="#6366f1" stroke="#4338ca" stroke-width="1"/>
+    <text x="155" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">etcd</text>
+    <text x="155" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">(Key-Value Store)</text>
+    
+    <rect x="205" y="170" width="80" height="40" rx="5" fill="#6366f1" stroke="#4338ca" stroke-width="1"/>
+    <text x="245" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Cloud Controller</text>
+    <text x="245" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Manager</text>
+  </g>
+  
+  <!-- Worker Node 1 -->
+  <g id="worker-node-1">
+    <rect x="50" y="320" width="300" height="280" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="200" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#16a34a">
+      Worker Node 1
+    </text>
+    
+    <!-- Node Components -->
+    <rect x="70" y="360" width="80" height="30" rx="5" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+    <text x="110" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">kubelet</text>
+    
+    <rect x="160" y="360" width="80" height="30" rx="5" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+    <text x="200" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">kube-proxy</text>
+    
+    <rect x="250" y="360" width="80" height="30" rx="5" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+    <text x="290" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Container Runtime</text>
+    
+    <!-- Pods -->
+    <g id="pods-node1">
+      <rect x="70" y="410" width="260" height="120" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1" stroke-dasharray="5,5"/>
+      <text x="200" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#16a34a">
+        Pods
+      </text>
+      
+      <!-- App Pods -->
+      <rect x="80" y="440" width="50" height="35" rx="3" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+      <text x="105" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Frontend</text>
+      <text x="105" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">React</text>
+      
+      <rect x="140" y="440" width="50" height="35" rx="3" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+      <text x="165" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Backend</text>
+      <text x="165" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Flask python</text>
+      
+      <rect x="200" y="440" width="50" height="35" rx="3" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+      <text x="225" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Database</text>
+      <text x="225" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">PostgreSQL</text>
+      
+      <rect x="260" y="440" width="50" height="35" rx="3" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+      <text x="285" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Monitoring</text>
+      <text x="285" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Prometheus</text>
+      
+      <!-- System Pods -->
+      <rect x="80" y="485" width="50" height="35" rx="3" fill="#06b6d4" stroke="#0891b2" stroke-width="1"/>
+      <text x="105" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Traefik</text>
+      <text x="105" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Ingress</text>
+      
+      <rect x="140" y="485" width="50" height="35" rx="3" fill="#6366f1" stroke="#4f46e5" stroke-width="1"/>
+      <text x="165" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">ArgoCD</text>
+      <text x="165" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">GitOps</text>
+      
+      <rect x="200" y="485" width="50" height="35" rx="3" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+      <text x="225" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Grafana</text>
+      <text x="225" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Dashboards</text>
+
+      <rect x="260" y="485" width="50" height="35" rx="3" fill="#6366f1" stroke="#7c3aed" stroke-width="1"/>
+      <text x="285" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Node </text>
+      <text x="285" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Exporter</text>
+    </g>
+    
+    <!-- Storage -->
+    <rect x="70" y="540" width="260" height="40" rx="5" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+    <text x="200" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#92400e">
+      Persistent Volume Claims (PVC)
+    </text>
+  </g>
+  
+  <!-- Worker Node 2 -->
+  <g id="worker-node-2">
+    <rect x="400" y="320" width="300" height="280" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="550" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#16a34a">
+      Worker Node 2
+    </text>
+    
+    <!-- Node Components -->
+    <rect x="420" y="360" width="80" height="30" rx="5" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+    <text x="460" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">kubelet</text>
+    
+    <rect x="510" y="360" width="80" height="30" rx="5" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+    <text x="550" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">kube-proxy</text>
+    
+    <rect x="600" y="360" width="80" height="30" rx="5" fill="#22c55e" stroke="#16a34a" stroke-width="1"/>
+    <text x="640" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Container Runtime</text>
+    
+    <!-- <rect x="620" y="400" width="50" height="35" rx="3" fill="#6366f1" stroke="#4f46e5" stroke-width="1"/>
+    <text x="515" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Node</text>
+    <text x="515" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Exporter</text> -->
+    <!-- Pods -->
+    <g id="pods-node2">
+      <rect x="420" y="410" width="260" height="120" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1" stroke-dasharray="5,5"/>
+      <text x="550" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#16a34a">
+        Pods (High Availability)
+      </text>
+      
+      <!-- Replicated Pods -->
+      <rect x="430" y="440" width="50" height="35" rx="3" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+      <text x="455" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Frontend</text>
+      <text x="455" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">React</text>
+      
+      <rect x="490" y="440" width="50" height="35" rx="3" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+      <text x="515" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Backend</text>
+      <text x="515" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Node.js</text>
+      
+      <rect x="550" y="440" width="50" height="35" rx="3" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+      <text x="575" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Database</text>
+      <text x="575" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">PostgreSQL</text>
+      
+      <!-- System Pods -->
+      <rect x="430" y="485" width="50" height="35" rx="3" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+      <text x="455" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Logging</text>
+      <text x="455" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Loki</text>
+      
+      <rect x="490" y="485" width="50" height="35" rx="3" fill="#6366f1" stroke="#4f46e5" stroke-width="1"/>
+      <text x="515" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Node</text>
+      <text x="515" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Exporter</text>
+      
+      <rect x="550" y="485" width="50" height="35" rx="3" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+      <text x="575" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">promtail</text>
+      <text x="575" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">Logs UI</text>
+    </g>
+    
+    <!-- Storage -->
+    <rect x="420" y="540" width="260" height="40" rx="5" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+    <text x="550" y="560" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#92400e">
+      Persistent Volume Claims (PVC)
+    </text>
+  </g>
+  
+  <!-- MetalLB Components across nodes -->
+  <g id="metallb-components">
+    <!-- MetalLB on Master -->
+    <rect x="260" y="240" width="70" height="25" rx="3" fill="#0891b2" stroke="#065f73" stroke-width="1"/>
+    <text x="295" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">MetalLB Ctrl</text>
+    
+    <!-- MetalLB Speaker on Worker 1 -->
+    <rect x="260" y="530" width="70" height="25" rx="3" fill="#06b6d4" stroke="#0891b2" stroke-width="1"/>
+    <text x="295" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">MetalLB Spkr</text>
+    
+    <!-- MetalLB Speaker on Worker 2 -->
+    <rect x="610" y="530" width="70" height="25" rx="3" fill="#06b6d4" stroke="#0891b2" stroke-width="1"/>
+    <text x="645" y="545" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="white">MetalLB Spkr</text>
+  </g>
+
+  <!-- Storage Layer -->
+  <g id="storage-layer">
+    <rect x="50" y="640" width="650" height="80" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="375" y="665" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#92400e">
+      Couche de Stockage - NFS Server
+    </text>
+    <text x="375" y="685" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#92400e">
+      Volumes Persistants Partagés
+    </text>
+    <text x="375" y="700" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#92400e">
+      (Base de données, Logs, Configurations, Artefacts)
+    </text>
+  </g>
+  
+  <!-- Namespaces Legend -->
+  <g id="namespaces">
+    <rect x="750" y="80" width="300" height="450" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+    <text x="900" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#334155">
+      Namespaces Kubernetes (Actifs)
+    </text>
+    
+    <!-- App Namespace -->
+    <rect x="770" y="175" width="260" height="35" rx="5" fill="#fee2e2" stroke="#ef4444" stroke-width="1"/>
+    <text x="900" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ef4444">
+      app+ (Applications métier)
+    </text>
+    
+    <!-- ArgoCD Namespace -->
+    <rect x="770" y="220" width="260" height="35" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="900" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#3b82f6">
+      argocd+ (GitOps et CI/CD)
+    </text>
+    
+    <!-- Logs Namespace -->
+    <rect x="770" y="270" width="260" height="35" rx="5" fill="#e9d5ff" stroke="#8b5cf6" stroke-width="1"/>
+    <text x="900" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#8b5cf6">
+      log+ (Centralisation des logs)
+    </text>
+    
+    <!-- Metallb-System Namespace -->
+    <rect x="770" y="315" width="260" height="35" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+    <text x="900" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#16a34a">
+      metallb-system (Load Balancer)
+    </text>
+    
+    <!-- Security Namespace -->
+    <rect x="770" y="360" width="260" height="35" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+    <text x="900" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f59e0b">
+      security+ (Sécurité et Secrets)
+    </text>
+    
+    <!-- Storage Namespace -->
+    <rect x="770" y="405" width="260" height="35" rx="5" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+    <text x="900" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ea580c">
+      storage+ (Stockage persistant)
+    </text>
+    
+    <!-- Traefik Namespace -->
+    <rect x="770" y="450" width="260" height="35" rx="5" fill="#d1fae5" stroke="#10b981" stroke-width="1"/>
+    <text x="900" y="475" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#10b981">
+      traefik+ (Ingress Controller)
+    </text>
+
+  </g>
+  
+  <!-- Network Flows -->
+  <g id="network-flows">
+    <!-- MetalLB flows -->
+
+<!--     
+    Network flows to MetalLB
+    <path d="M 700 400 L 750 390" stroke="#0891b2" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M 925 320 L 925 280" stroke="#0891b2" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+    <text x="760" y="420" font-family="Arial, sans-serif" font-size="9" fill="#0891b2">External Traffic</text> -->
+    
+    <!-- Master to Workers -->
+    <path d="M 200 280 L 200 320" stroke="#0369a1" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M 200 280 L 550 320" stroke="#0369a1" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    
+    <!-- Inter-node communication -->
+    <path d="M 350 460 L 400 460" stroke="#16a34a" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+    
+    <!-- Storage connections -->
+    <path d="M 200 600 L 375 640" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M 550 600 L 375 640" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Arrow marker definition -->
+  <!-- <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#374151"/>
+    </marker>
+  </defs> -->
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="750" width="1000" height="120" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+    <text x="550" y="775" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1f2937">
+      Légende - Cluster Kubernetes en Production
+    </text>
+    
+    <!-- Control Plane -->
+    <rect x="70" y="790" width="15" height="15" fill="#3b82f6"/>
+    <text x="95" y="802" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">Control Plane</text>
+    
+    <!-- Node Components -->
+    <rect x="200" y="790" width="15" height="15" fill="#22c55e"/>
+    <text x="225" y="802" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">Node Components</text>
+    
+    <!-- App Pods -->
+    <rect x="350" y="790" width="15" height="15" fill="#ef4444"/>
+    <text x="375" y="802" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">Application Pods</text>
+    
+    <!-- System Pods -->
+    <rect x="480" y="820" width="15" height="15" fill="#8b5cf6"/>
+    <text x="505" y="832" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">System Pods</text>
+    
+    <!-- MetalLB -->
+    <rect x="650" y="790" width="15" height="15" fill="#16a34a"/>
+    <text x="675" y="802" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">MetalLB LoadBalancer</text>
+    
+    <!-- Storage -->
+    <rect x="70" y="820" width="15" height="15" fill="#fbbf24"/>
+    <text x="95" y="832" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">Storage Layer</text>
+    
+    <!-- GitOps -->
+    <rect x="200" y="820" width="15" height="15" fill="#6366f1"/>
+    <text x="225" y="832" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">GitOps/CI-CD</text>
+    
+    <!-- Security -->
+    <rect x="350" y="820" width="15" height="15" fill="#f59e0b"/>
+    <text x="375" y="832" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">Security et Secrets</text>
+    
+    <!-- Communication -->
+    <line x1="500" y1="797" x2="530" y2="797" stroke="#0369a1" stroke-width="2"/>
+    <text x="540" y="802" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">API Communication</text>
+    
+    <!-- Data Flow -->
+    <line x1="650" y1="827" x2="680" y2="827" stroke="#16a34a" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="690" y="832" font-family="Arial, sans-serif" font-size="12" fill="#1f2937">Data Flow</text>
+
+  </g>
+  
+  <!-- Footer -->
+  <text x="700" y="950" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#6b7280">
+    Architecture Kubernetes
+  </text>
+  <text x="700" y="970" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#9ca3af">
+    Master Node + Worker Nodes + MetalLB + ArgoCD + Traefik + Storage + Security
+  </text>
+</svg>

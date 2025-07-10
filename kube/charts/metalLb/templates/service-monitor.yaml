@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: metallb-metrics
+  namespace: metallb-system
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: metallb
+  namespaceSelector:
+    matchNames:
+      - metallb-system
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 45s

@@ -1,0 +1,9 @@
+Flask==2.2.5
+flask-sqlalchemy>=3.0
+pymysql>=1.0.0
+cryptography>=40.0.0
+prometheus-flask-exporter==0.22.0
+opentelemetry-api==1.25.0
+opentelemetry-sdk==1.25.0
+opentelemetry-exporter-otlp==1.25.0
+opentelemetry-instrumentation-flask==0.46b0  # ⚠️ passe à la version 0.46b0

@@ -1,0 +1,24 @@
+metallb:
+  addressPool:
+    range: 192.168.56.100-192.168.56.120
+  controller:
+    enabled: true
+    ressources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 50m
+        memory: 64Mi
+  speaker:
+    enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+  prometheus:
+    serviceMonitor:
+      enabled: false

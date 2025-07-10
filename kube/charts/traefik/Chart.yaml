@@ -1,0 +1,9 @@
+apiVersion: v2
+name: traefik
+description: Traefik en mode Ingress Controller avec NodePort
+version: 0.1.0
+
+dependencies:
+  - name: traefik
+    version: 35.0.0
+    repository: https://traefik.github.io/charts

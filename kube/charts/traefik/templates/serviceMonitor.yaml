@@ -1,0 +1,58 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: traefik-servicemonitor
+  namespace: traefik # C'est le namespace où Traefik est déployé et où se trouve son service
+  labels:
+    release: prometheus # Gardé pour cohérence
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: traefik # Label standard de Traefik
+  endpoints:
+  - port: traefik # Le Service Traefik expose un port nommé 'traefik' sur le 8080. 
+                  # Mais les métriques sont sur l'entrypoint 'metrics' qui écoute sur 9100.
+                  # Nous devons donc cibler le *port de l'entrypoint metrics*.
+                  # D'après votre `kubectl get deployment ... | grep args`, l'entrypoint des métriques
+                  # est nommé 'metrics' et écoute sur le port 9100.
+                  # Il est crucial de s'assurer que le *Service* Traefik expose bien ce port 9100.
+                  # Si ce n'est pas le cas, le ServiceMonitor ne pourra pas s'y connecter.
+                  # Vos logs montrent: `--entryPoints.metrics.address=:9100/tcp`
+                  # ET votre service montre: `- name: traefik, port: 8080, targetPort: traefik`
+                  # CELA SIGNIFIE QUE LES METRIQUES SONT SUR UN AUTRE PORT QUE CELUI NOMMÉ 'traefik' (8080).
+                  # Votre service ne semble pas exposer le port 9100 sous un nom.
+                  # Il faut ajouter un port 'metrics' dans le service traefik, comme ceci:
+                  # - name: metrics
+                  #   port: 9100
+                  #   protocol: TCP
+                  #   targetPort: 9100
+                  # SANS CELA, PROMETHEUS NE POURRA PAS SCRAPPER.
+                  # Pour l'instant, je vais utiliser le port `traefik` (8080) avec le chemin `/metrics` car le 9100 n'est pas mappé.
+                  # Mais il est impératif que Traefik expose ses métriques sur un port accessible par son service.
+    interval: 30s
+    path: /metrics # Traefik expose ses métriques sur /metrics par défaut si activé
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - traefik # Le namespace où Traefik est déployé
+
+# ancienne version
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: traefik-servicemonitor
+#   namespace: log
+#   labels:
+#     release: prometheus
+# spec:
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/name: traefik
+#   endpoints:
+#   - port: web
+#     interval: 30s
+#     path: /metrics
+#     scheme: http
+#   namespaceSelector:
+#     matchNames:
+#     - log

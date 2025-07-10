@@ -1,0 +1,61 @@
+
+keycloak:
+  proxyAddressForwarding: true
+  extraEnvVars:
+#    - name: KC_HOSTNAME
+#      value: "keycloak.client"
+    - name: PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KC_HOSTNAME_STRICT
+      value: "false"
+    - name: KC_HOSTNAME_STRICT_HTTPS
+      value: "false"
+    - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+      value: "true"
+    - name: KEYCLOAK_FRONTEND_URL
+      value: "https://keycloak.client"
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 60  # <-- au lieu de 10 par défaut
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 10
+  auth:
+    adminUser: admin
+    adminPassword: adminpassword
+
+  service:
+    type: ClusterIP
+    ports:
+      http: 80
+      https: 8443
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hostname: keycloak.client
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+      traefik.ingress.kubernetes.io/forwarded-headers: "true"
+    tls: true
+    extraTls:
+      - hosts:
+          - keycloak.client
+        secretName: keycloak-tls-secret
+  postgresql:
+    enabled: true
+    auth:
+      postgresPassword: "superSecretPostgres"     # mot de passe pour l’user postgres “superuser”
+      username: bn_keycloak    # nom d’utilisateur créé
+      password: "superSecretKeycloak"             # mot de passe pour l’utilisateur bn_keycloak
+      database: bitnami_keycloak
+      existingSecret: ""       # ou fichier secret, si vous en utilisez un
+      secretKeys:
+        userPasswordKey: password
+    architecture: standalone
+    persistence:
+      enabled: true
+      size: 8Gi
+
+

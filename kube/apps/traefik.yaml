@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Jehuty12/T-CLO-902-PRIVEE.git
+    targetRevision: vagrant-corentin
+    path: kube/charts/traefik
+    helm:
+      valueFiles:
+        - values.yaml
+        - common-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

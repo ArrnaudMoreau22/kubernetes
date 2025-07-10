@@ -1,0 +1,85 @@
+# kube/apps/loki.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:Jehuty12/T-CLO-902-PRIVEE.git'
+    path: kube/charts/loki
+    targetRevision: vagrant-corentin
+    helm:
+      valueFiles:
+        - values.yaml
+        - common-values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: log
+  # Ignorer les ressources problématiques
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      jsonPointers:
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+        - /spec/versions
+    # Ignorer les CRDs Prometheus Operator (gérées par prometheus)
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: podmonitors.monitoring.coreos.com
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: probes.monitoring.coreos.com
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: servicemonitors.monitoring.coreos.com
+    # Ignorer toutes les ressources Grafana Agent auto-générées
+    - group: monitoring.grafana.com
+      kind: MetricsInstance
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+    - group: monitoring.grafana.com
+      kind: PodLogs
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+    - group: monitoring.grafana.com
+      kind: GrafanaAgent
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+    - group: monitoring.grafana.com
+      kind: LogsInstance
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true
+      - SkipDryRunOnMissingResource=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: "5s"
+        factor: 2
+        maxDuration: "3m"

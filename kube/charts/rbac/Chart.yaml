@@ -1,0 +1,4 @@
+apiVersion: v2
+name: rbac
+description: Role K8S keycloak
+version: 0.1.0

@@ -1,0 +1,60 @@
+{{- if .Values.prometheus.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-servicemonitor
+  namespace: app
+  labels:
+    release: prometheus # Gardé pour cohérence
+spec:
+  namespaceSelector:
+    matchNames:
+      - app
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+    - port: http # Nom du port défini dans charts/backend/templates/backend-service.yaml (correspondant au 5000)
+      interval: 15s
+      path: /metrics # Chemin des métriques exposé par prometheus_flask_exporter
+      scheme: http
+{{- end }}
+
+# ancienne version
+# {{- if .Values.prometheus.enabled }}
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: backend-servicemonitor
+#   namespace: app
+#   labels:
+#     release: prometheus
+# spec:
+#   namespaceSelector:
+#     matchNames:
+#       - app
+#   selector:
+#     matchLabels:
+#       app: backend
+#   endpoints:
+#     - port: http
+#       interval: 15s
+# {{- end }}
+
+
+# {{- if .Values.prometheus.enabled }}
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: backend
+#   labels:
+#     release: prometheus  # ou autre selon ton Prometheus
+# spec:
+#   selector:
+#     matchLabels:
+#       app: backend
+#   endpoints:
+#     - port: http
+#       path: /metrics
+#       interval: 15s
+# {{- end }}

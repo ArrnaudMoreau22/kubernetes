@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+  namespace: app # Assurez-vous que c'est le bon namespace
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend # Cible le déploiement 'frontend'
+  minReplicas: 1 # Nombre minimal de répliques
+  maxReplicas: 5 # Nombre maximal de répliques
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70 # Cible 70% d'utilisation CPU par rapport au 'request'

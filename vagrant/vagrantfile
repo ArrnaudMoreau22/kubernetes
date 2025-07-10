@@ -1,0 +1,79 @@
+Vagrant.configure("2") do |config|
+  # Paramètres globaux
+  BOX_NAME           = "debian/bookworm64"
+  MEMORY             = 4096
+  CPUS               = 4
+  DISK_SIZE          = 10240  # en Mo (10 Go)
+  STORAGE_CONTROLLER = "SATA Controller"
+  DISK_DIR           = "disks"  # répertoire pour stocker les disques virtuels
+
+  # Configuration globale de la box
+  config.vm.box = BOX_NAME
+
+  # Configuration du provider VirtualBox pour toutes les VMs
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = MEMORY
+    vb.cpus   = CPUS
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
+  end
+
+  # Création du répertoire pour les disques si nécessaire
+  Dir.mkdir(DISK_DIR) unless Dir.exist?(DISK_DIR)
+
+  # Définition des nœuds du cluster
+  nodes = [
+    { name: "master",  ip: "192.168.56.10", role: "master" },
+    { name: "worker1", ip: "192.168.56.11", role: "worker" },
+    { name: "worker2", ip: "192.168.56.12", role: "worker" }
+  ]
+
+  nodes.each do |node|
+    config.vm.define node[:name] do |node_config|
+      node_config.vm.hostname = node[:name]
+      node_config.vm.network "private_network", ip: node[:ip]
+      node_config.vm.network "public_network", type: "dhcp"
+
+      # Configuration du disque virtuel pour chaque VM
+      node_config.vm.provider "virtualbox" do |vb|
+        disk_path = File.join(DISK_DIR, "disk-#{node[:name]}.vdi")
+        # Création du disque s'il n'existe pas déjà
+        unless File.exist?(disk_path)
+          vb.customize ["createhd", "--filename", disk_path, "--size", DISK_SIZE]
+        end
+        vb.customize ["storageattach", :id, "--storagectl", STORAGE_CONTROLLER,
+                      "--port", "1", "--device", "0", "--type", "hdd", "--medium", disk_path]
+      end
+
+      if node[:role] == "worker1"
+        node_config.vm.network "forwarded_port", guest: 30114, host: 80
+      end
+
+      if node[:role] == "master"
+        # Provisionnement du master avec le script d'installation Kubernetes
+        node_config.vm.provision "shell", path: "../vagrant/scripts/install.sh"
+
+        node_config.vm.provision "file",
+          source: "../pooc",
+          destination: "/home/vagrant/pooc"
+
+         node_config.vm.synced_folder "../app", "/home/vagrant/app"
+      else
+        # Provisionnement des workers en passant directement la commande join en argument
+        node_config.vm.provision "shell", inline: <<-SHELL
+          echo "--------------------------------------------------"
+          echo "[DEBUG] Worker #{node[:name]} : attente du fichier de commande join..."
+          echo "--------------------------------------------------"
+          while [ ! -f /vagrant/kubeadm-join-command.sh ]; do
+        sleep 5
+          done
+          JOIN_CMD=$(cat /vagrant/kubeadm-join-command.sh)
+          echo "--------------------------------------------------"
+          echo "[DEBUG] Worker #{node[:name]} : commande join trouvée :"
+          echo "$JOIN_CMD"
+          echo "--------------------------------------------------"
+          sudo bash /vagrant/scripts/install-worker.sh "$JOIN_CMD"
+        SHELL
+      end
+    end
+  end
+end

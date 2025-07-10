@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: log
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: prometheus.client
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090
+
+# ancienne version
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: prometheus-ingress
+#   namespace: log
+#   annotations:
+#     # indique à Traefik d’utiliser sa classe d’Ingress
+#     kubernetes.io/ingress.class: traefik
+#     # (facultatif) redirection HTTP→HTTPS
+#     traefik.ingress.kubernetes.io/redirect-entry-point: websecure
+# spec:
+#   ingressClassName: traefik
+#   rules:
+#     - host: prometheus.client
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: prometheus-server
+#                 port:
+#                   number: 80

@@ -1,0 +1,100 @@
+promtail:
+  enabled: true
+
+  # Configuration Promtail
+  config:
+    clients:
+      - url: http://loki.log.svc.cluster.local:3100/loki/api/v1/push
+        backoff_config:
+          max_period: 1m
+          max_retries: 10
+        timeout: 10s
+        batchwait: 1s
+    limits_config:
+      reject_old_samples: false
+      reject_old_samples_max_age: 168h
+    snippets:
+      scrapeConfigs: |
+        # Kubernetes pod logs
+        - job_name: kubernetes-pods
+          kubernetes_sd_configs:
+            - role: pod
+          pipeline_stages:
+            - cri: {}
+          relabel_configs:
+            - action: replace
+              replacement: kubernetes-pods
+              target_label: job
+            - source_labels:
+                - __meta_kubernetes_pod_controller_name
+              regex: ([0-9a-z-.]+?)(-[0-9a-f]{8,10})?
+              action: replace
+              target_label: __tmp_controller_name
+            - source_labels:
+                - __meta_kubernetes_pod_label_app_kubernetes_io_name
+                - __meta_kubernetes_pod_label_app
+                - __tmp_controller_name
+                - __meta_kubernetes_pod_name
+              regex: ^;*([^;]+)(;.*)?$
+              action: replace
+              target_label: app
+            - source_labels:
+                - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+                - __meta_kubernetes_pod_label_release
+              regex: ^;*([^;]+)(;.*)?$
+              action: replace
+              target_label: instance
+            - source_labels:
+                - __meta_kubernetes_pod_label_app_kubernetes_io_component
+                - __meta_kubernetes_pod_label_component
+              regex: ^;*([^;]+)(;.*)?$
+              action: replace
+              target_label: component
+            - replacement: /var/log/pods/*$1/*.log
+              separator: /
+              source_labels:
+                - __meta_kubernetes_pod_uid
+                - __meta_kubernetes_pod_container_name
+              target_label: __path__
+            - source_labels:
+                - __meta_kubernetes_pod_namespace
+              target_label: namespace
+            - source_labels:
+                - __meta_kubernetes_pod_name
+              target_label: pod
+            - source_labels:
+                - __meta_kubernetes_pod_container_name
+              target_label: container
+            # Exclude specific system pods if needed
+            - source_labels:
+                - __meta_kubernetes_pod_name
+              regex: (kube-system|metallb-system).*
+              action: drop
+
+  # Deploy as DaemonSet to collect logs from all nodes
+  daemonset:
+    enabled: true
+
+  # Resources
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  # Tolerations for master nodes
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+      operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+      operator: Exists
+
+# ServiceMonitor pour Prometheus
+serviceMonitor:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s

@@ -1,0 +1,47 @@
+# Note: MySQL itself does not expose Prometheus metrics.
+# You need a 'mysqld_exporter'. If you deploy one,
+# uncomment and adapt this ServiceMonitor to target your exporter.
+
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: mysql-servicemonitor
+#   namespace: app
+#   labels:
+#     # Le 'release: prometheus' est maintenu pour la cohérence,
+#     # mais le 'serviceMonitorNamespaceSelector' de votre Prometheus CRD pour le namespace 'app'
+#     # est le critère principal de découverte ici.
+#     release: prometheus
+# spec:
+#   selector:
+#     # matchLabels:
+#     #   app.kubernetes.io/name: mysql-exporter # Ciblez le label de l'exporter, pas de MySQL
+#   endpoints:
+#   - port: http-metrics # Port typique pour un mysqld_exporter
+#     interval: 30s
+#     path: /metrics     # Chemin typique pour les métriques d'un mysqld_exporter
+#     scheme: http
+#   namespaceSelector:
+#     matchNames:
+#     - app # Namespace où votre mysqld_exporter sera déployé
+
+# ancienne version
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: mysql-servicemonitor
+#   namespace: app
+#   labels:
+#     release: prometheus
+# spec:
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/name: mysql
+#   endpoints:
+#   - port: mysql
+#     interval: 30s
+#     path: /metrics
+#     scheme: http
+#   namespaceSelector:
+#     matchNames:
+#     - app

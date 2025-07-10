@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Jehuty12/T-CLO-902-PRIVEE.git
+    targetRevision: vagrant-corentin
+    path: kube/charts/prometheus
+    helm:
+      valueFiles:
+        - values.yaml
+        - common-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: log
+  # Ignorer les ressources problématiques
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      jsonPointers:
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+        - /spec/versions
+    # Ignorer les ServiceMonitors avec des champs non reconnus
+    - group: monitoring.coreos.com
+      kind: ServiceMonitor
+      jsonPointers:
+        - /spec/endpoints
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+    # Ignorer les PrometheusRules
+    - group: monitoring.coreos.com
+      kind: PrometheusRule
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+    # Ignorer les ressources Prometheus avec des champs dynamiques
+    - group: monitoring.coreos.com
+      kind: Prometheus
+      jsonPointers:
+        - /spec
+        - /metadata/annotations
+        - /metadata/labels
+        - /metadata/resourceVersion
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true
+      - Replace=true
+      - SkipDryRunOnMissingResource=true
+      - RespectIgnoreDifferences=true

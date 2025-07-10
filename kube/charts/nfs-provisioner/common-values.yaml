@@ -1,0 +1,19 @@
+nfs-subdir-external-provisioner:
+  nfs:
+    server: 192.168.56.10 # IP du ton master (où tourne le serveur NFS)
+    path: /srv/nfs/k8s-data # Dossier partagé sur du serveur NFS
+
+  storageClass:
+    name: nfs-client
+    defaultClass: true
+    reclaimPolicy: Retain
+
+  rbac:
+    create: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi

@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: security-oauth2-proxy@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: frontend.client
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: {{ .Values.image.frontend.port }}
+  tls:
+    - hosts:
+        - frontend.client
+      secretName: traefik-cert
+
+
+# ancienne version
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: frontend-ingress
+#   annotations:
+#     traefik.ingress.kubernetes.io/router.entrypoints: web
+#     traefik.ingress.kubernetes.io/router.middlewares: security-oauth2-proxy@kubernetescrd
+# spec:
+#   ingressClassName: traefik
+#   rules:
+#     - host: frontend.client
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: frontend
+#                 port:
+#                   number: {{ .Values.image.frontend.port }}

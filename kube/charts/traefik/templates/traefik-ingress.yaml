@@ -1,0 +1,32 @@
+# version ancienne sans tls
+{{- if .Values.ingressRoute.dashboard.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "traefik.fullname" . }}-dashboard
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+  annotations:
+    # Use Traefik as the IngressClass
+    kubernetes.io/ingress.class: traefik
+    # Rewrite /dashboard to / internally
+    traefik.ingress.kubernetes.io/rule-type: PathPrefix
+    traefik.ingress.kubernetes.io/rewrite-target: /
+    # Additional user annotations
+    {{- range $key, $value := .Values.ingressRoute.dashboard.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ .Values.ingressRoute.dashboard.host | default "traefik.client" }}
+      http:
+        paths:
+          - path: /dashboard
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "traefik.fullname" . }}
+                port:
+                  number: {{ .Values.traefik.ports.traefik.port }}
+{{- end }}

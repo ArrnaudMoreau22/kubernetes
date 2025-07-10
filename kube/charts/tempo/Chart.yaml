@@ -1,0 +1,5 @@
+apiVersion: v2
+name: tempo
+description: Trace backend by Grafana Labs
+type: application
+version: 0.1.0

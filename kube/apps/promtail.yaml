@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: promtail
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Jehuty12/T-CLO-902-PRIVEE.git
+    targetRevision: vagrant-corentin
+    path: kube/charts/promtail
+    helm:
+      valueFiles:
+        - values.yaml
+        - common-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: log
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

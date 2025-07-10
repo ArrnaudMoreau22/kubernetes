@@ -1,0 +1,178 @@
+traefik:
+  logs:
+    general:
+      level: DEBUG
+
+  persistence:
+    enabled: true
+    path: /data
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+  ports:
+    web:
+      port: 8000
+      nodePort: 30080
+      expose:
+        default: true
+      protocol: TCP
+
+    websecure:
+      port: 8443
+      nodePort: 30443
+      expose:
+        default: true
+      protocol: TCP
+
+    traefik:
+      port: 8080
+      nodePort: 30088
+      expose:
+        default: true
+      protocol: TCP
+
+    metrics:
+      port: 9100
+      nodePort: 30090
+      expose:
+        default: false
+      protocol: TCP
+
+  service:
+    type: LoadBalancer
+
+  additionalArguments:
+    - "--api.insecure=true"
+    - "--api.dashboard=true"
+    - "--entrypoints.web.address=:8000"
+    - "--entrypoints.websecure.address=:8443"
+    - "--entrypoints.traefik.address=:8080"
+    - "--entrypoints.metrics.address=:9100/tcp"
+    - "--ping.entrypoint=traefik"
+    - "--metrics.prometheus=true"
+    - "--metrics.prometheus.entrypoint=metrics"
+    - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+    - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+
+  providers:
+    kubernetesCRD:
+      enabled: true
+    kubernetesIngress:
+      enabled: true
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+# si vou svoulez utiliser let's encrypt décommentez la section ci-dessous et modifiez l'email
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: ton.email@domaine.fr
+#       storage: /data/acme.json
+#       httpChallenge:
+#         entryPoint: web
+
+# ⚠️ Doit rester à la racine
+ingressRoute:
+  dashboard:
+    enabled: true
+    host: traefik.client
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+    matchRule: Host(`traefik.client`)
+    entryPoints: ["web"]
+# ancienne version
+# traefik:
+#   logs:
+#     general:
+#       level: DEBUG
+#   persistence:
+#     enabled: true
+#     path: /data
+#     accessMode: ReadWriteOnce
+#     size: 1Gi
+#   ports:
+#     web:
+#       port: 8000
+#       nodePort: 30080
+#       expose:
+#         default: true
+#       protocol: TCP
+
+#     websecure:
+#       port: 8443
+#       nodePort: 30443
+#       expose:
+#         default: true
+#       protocol: TCP
+
+#     traefik:
+#       port: 8080
+#       nodePort: 30088
+#       expose:
+#         default: true
+#       protocol: TCP
+
+#     metrics:
+#       port: 9100
+#       nodePort: 30090 # Un NodePort optionnel, assurez-vous qu'il est libre
+#       expose:
+#         default: false # Les métriques ne sont généralement pas exposées publiquement
+#       protocol: TCP
+
+#   service:
+#     type: LoadBalancer
+
+#   additionalArguments:
+#     - "--api.insecure=true"
+#     - "--api.dashboard=true"
+#     - "--entrypoints.web.address=:8000"
+#     - "--entrypoints.websecure.address=:8444"
+#     - "--entrypoints.traefik.address=:8080"
+#     - "--entrypoints.metrics.address=:9100/tcp" # S'assurer que cette ligne est présente
+#     - "--ping.entrypoint=traefik"
+#     - "--metrics.prometheus=true" # S'assurer que cette ligne est présente pour activer Prometheus métriques
+#     - "--metrics.prometheus.entrypoint=metrics" # S'assurer que cette ligne est présente pour lier métriques à l'entrypoint
+
+#   providers:
+#     kubernetesCRD:
+#       enabled: true
+#     kubernetesIngress:
+#       enabled: true
+
+#   podSecurityContext:
+#     runAsNonRoot: true
+#     runAsUser: 1000
+
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 128Mi
+#     limits:
+#       cpu: 100m
+#       memory: 128Mi
+#   certificatesResolvers:
+#     letsencrypt:
+#       acme:
+#         email: ton.email@domaine.fr
+#         storage: /data/acme.json
+#         httpChallenge:
+#           entryPoint: web
+# # 👇 NOTE : cette section DOIT être à la racine (pas sous `traefik`)
+# ingressRoute:
+#   dashboard:
+#     enabled: true
+#     host: traefik.client
+#     annotations:
+#       traefik.ingress.kubernetes.io/router.entrypoints: web
+#     matchRule: Host(`traefik.client`)
+#     entryPoints: ["web"]

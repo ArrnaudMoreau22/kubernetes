@@ -1,0 +1,7 @@
+image:
+  backend:
+    repository: docker.io/addaxcd/mon-backend
+    tag: "1.3"
+    port: 5000
+prometheus:
+  enabled: true

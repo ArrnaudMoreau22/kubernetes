@@ -1,0 +1,15 @@
+# kube/charts/monitoring-stack/Chart.yaml
+apiVersion: v2
+name: monitoring-stack
+description: Un chart Helm personnalisé pour déployer kube-prometheus-stack et monitorer l'application.
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: kube-prometheus-stack
+    # La version est la même que celle que vous aviez dans votre ancien chart "monitoring"
+    version: 70.8.0
+    # Dépôt officiel de la communauté Prometheus
+    repository: https://prometheus-community.github.io/helm-charts
+    # On utilise un alias pour que les valeurs dans common-values.yaml soient sous une clé claire
+    alias: kube-prometheus-stack
