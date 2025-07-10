@@ -4,8 +4,6 @@ Ce projet démontre la mise en place complète d'une infrastructure et d'un dép
 
 Le but est de simuler un environnement de production en intégrant des briques essentielles telles que le monitoring, la journalisation, la sécurité et le routage avancé.
 
-[](https://www.google.com/search?q=./vagrant/LICENSE)
-
 -----
 
 ## 🏛️ Architecture
@@ -97,7 +95,7 @@ Le projet est conçu pour être déployé en suivant un ordre logique. Des guide
 ### 3\. Déploiement d'ArgoCD
 
 Une fois dans le master, suivez le guide détaillé pour installer et configurer ArgoCD.
-➡️ **Voir le guide :** [`docs/deployment/argocd-deployment.md`](https://www.google.com/search?q=./docs/deployment/argocd-deployment.md)
+➡️ **Voir le guide :** [`docs/deployment/argocd-deployment.md`](./docs/deployment/argocd-deployment.md)
 
 ### 4\. Déploiement des Applications via GitOps
 
@@ -110,7 +108,7 @@ Le projet utilise une application "racine" (`root-app`) qui déploie toutes les 
     ```
 2.  Dans l'interface d'ArgoCD, créez l'application `root-app` en pointant vers le chemin `kube/apps` de ce dépôt. ArgoCD se chargera de déployer tous les composants de manière récursive.
 
-➡️ **Voir le guide :** [`docs/deployment/applications-deployment.md`](https://www.google.com/search?q=./docs/deployment/applications-deployment.md)
+➡️ **Voir le guide :** [`docs/deployment/applications-deployment.md`](./docs/deployment/applications-deployment.md)
 
 ### 5\. Configuration TLS et Accès
 
@@ -126,7 +124,7 @@ Pour accéder aux services via des noms de domaine, vous devez configurer le chi
     192.168.56.102 keycloak.client
     ```
 
-➡️ **Voir le guide :** [`docs/security/tls-configuration.md`](https://www.google.com/search?q=./docs/security/tls-configuration.md)
+➡️ **Voir le guide :** [`docs/security/tls-configuration.md`](./docs/security/tls-configuration.md)
 
 -----
 
@@ -151,4 +149,5 @@ Ce projet constitue une base solide. Voici quelques pistes d'amélioration possi
   * **Tests Automatisés** : Ajouter des tests unitaires pour le backend Flask et des tests d'intégration pour l'ensemble de l'application.
   * **Sécurité Avancée** : Intégrer pleinement Keycloak à l'application pour l'authentification des utilisateurs, et mettre en place des NetworkPolicies plus strictes.
   * **Déploiement Cloud** : Adapter le projet pour un déploiement sur un fournisseur cloud (AWS, GCP, Azure) en utilisant Terraform ou un service Kubernetes managé (EKS, GKE, AKS).
+
 
